@@ -1,5 +1,6 @@
 from PadicNumber import *
 from PadicMatrix import *
+from PadicVector import *
 
 #Pre: need to display helpful tips to user
 #Post: helpful tips displayed to user
