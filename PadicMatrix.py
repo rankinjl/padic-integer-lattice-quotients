@@ -82,6 +82,3 @@ class PadicMatrix:
             description = description + "\t]\n"
         description = description + "]"
         return description
-
-
-

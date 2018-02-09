@@ -1,4 +1,4 @@
-#from PadicNumber import *
+from PadicNumber import *
 from PadicMatrix import *
 
 #Pre: need to display helpful tips to user
