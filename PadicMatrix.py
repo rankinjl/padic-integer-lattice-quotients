@@ -28,6 +28,31 @@ class PadicMatrix:
         self.__columns = int(columns)
         self.__values = self.__fillInValues(valueListRowByRow)
 
+    #Pre: need to create a matrix of PadicVectors given by vectorListForRows
+        #so that each vector in vectorListForRows is a row in the matrix
+    #Post: PadicMatrix created
+    def __init__(self, vectorListForRows):
+        if(not isinstance(vectorListForRows,list) or len(vectorListForRows)<=0):
+            raise ValueError("Must be a list of vectors!")
+        self.__rows = len(vectorListForRows)
+        if(not isinstance(vectorListForRows[0],PadicVector)):
+                raise ValueError("The vectors must be PadicVector instances!")
+        self.__columns = vectorListForRows[0].getRows()
+        rowsAndCols = [[]]*self.__rows
+        #rowsAndCols[r][c] = vectorListForRows[r][c]
+        for row in self.__rows:
+            currentVector = vectorListForRows[row]
+            if(not isinstance(currentVector,PadicVector)):
+                raise ValueError("The vectors must be PadicVector instances!")
+            if(self.__columns!=currentVector.getRows()):
+                raise ValueError("All vectors must have the same number of entries!")
+            rowsAndCols[row] = [0]*self.__columns
+            for col in len(currentVector):
+                if(not isinstance(currentVector[col],PadicNumber)):
+                   raise ValueError("Entries in vectors must be PadicNumbers!")
+                rowsAndCols[row][col] = currentVector[col]
+        self.__values = rowsAndCols
+
     #Pre: need to fill in the values for this PadicMatrix given in valueList
     #Post: values assigned
     def __fillInValues(self,valueList):
@@ -70,7 +95,23 @@ class PadicMatrix:
     def getColumns(self):
         return self.__columns
 
+    #Pre: need to get the reduced echelon form of this PadicMatrix
+    #Post: reduced echelon form calculated and returned
+    def getReducedEchelonForm(self):
+        return self.__values
+        #TODO
 
+    #Pre: need to see if this PadicMatrix and other are equivalent
+    #Post: if equivalent, True returned. else, False returned
+    def equals(self, other):
+        if(not isinstance(other,PadicMatrix)):
+            return False
+        for row in self.__values:
+            for col in self.__values[row]:
+                if(not other.getValue(row,col).equals(self.getValue(row,col))):
+                    return False
+        return True
+    
     #Pre: need to print this p-adic matrix
     #Post: string describing p-adic matrix returned
     def __str__(self):

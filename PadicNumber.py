@@ -92,6 +92,22 @@ class PadicNumber:
     def getCoefficients(self):
         return self.__coefficients
 
+    #Pre: need to see if this PadicNumber is equivalent to other
+    #Post: if equivalent, True returned. else, False returned
+    def equals(self, other):
+        if(not isinstance(other,PadicNumber)):
+            return False
+        if(self.getPrime()!=other.getPrime() or self.getPrecision()!=other.getPrecision()):
+            return False
+        if(self.getSmallestPower()!=other.getSmallestPower()):
+            return False
+        these = self.getCoefficients()
+        others = other.getCoefficients()
+        for i in range(len(these)):
+            if(these[i]!=others[i]):
+                return False
+        return True
+
     #Pre: need to print this p-adic number
     #Post: string describing p-adic number returned
     def __str__(self):
