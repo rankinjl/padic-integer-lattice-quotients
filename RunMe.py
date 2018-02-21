@@ -8,8 +8,6 @@ def displayHelp():
     print("Welcome to the p-adic number program!")
     print("To create a p-adic number, use [varName = ] PadicNumber(list_of_coefficients,smallest_power)")
     print("For example, 'one = Padic([1],0)' or 'Padic([1,1,0,0,1),-3)")
-    print("For Padics a and b, you can print(a), a.multiply(b), a.add(b), "+
-          "a.getAdditiveInverse(), b.getMultiplicativeInverse, b.divide(a), a.subtract(b), etc")
     print()
 
     

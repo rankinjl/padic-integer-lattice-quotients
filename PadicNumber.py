@@ -72,6 +72,14 @@ class PadicNumber:
                 currentPower = currentPower+1
         return coefficients
 
+    #Pre: need to get the absolute value of this p-adic number
+    #Post: p-adic absolute value returned
+    def getPadicAbsoluteValue(self):
+        if(self.__coefficients[self.__smallestPower]==0):
+            return 0
+        else:
+            return self.__prime**(-self.__smallestPower)
+
     #Pre: need the precision of the p-adic number
     #Post: precision returned
     def getPrecision(self):
@@ -99,12 +107,13 @@ class PadicNumber:
             return False
         if(self.getPrime()!=other.getPrime() or self.getPrecision()!=other.getPrecision()):
             return False
-        if(self.getSmallestPower()!=other.getSmallestPower()):
+        smallest = self.getSmallestPower()
+        if(smallest!=other.getSmallestPower()):
             return False
         these = self.getCoefficients()
         others = other.getCoefficients()
         for i in range(len(these)):
-            if(these[i]!=others[i]):
+            if(these[smallest+i]!=others[smallest+i]):
                 return False
         return True
 
