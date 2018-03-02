@@ -15,16 +15,18 @@ class VectorSpace:
     #Pre: need to create a p-adic vector space with PadicVectors in the
         #spanning set
     #Post: p-adic vector space created
-    def __init__(self, *padicVectors):
+    def __init__(self, padicVectorsList):
         span = []
-        if(len(padicVectors)>0):
-            rows = padicVectors[0].getRows()
-            for vector in padicVectors:
+        if(not isinstance(padicVectorsList,list)):
+            raise ValueError("padicVectorsList must be a list!")
+        if(len(padicVectorsList)>0):
+            rows = padicVectorsList[0].getRows()
+            for vector in padicVectorsList:
                 if(not isinstance(vector,PadicVector)):
                     raise ValueError("You should only give the VectorSpace PadicVectors!")
                 else:
                     if(rows!=vector.getRows()):
-                        raise ValueError("All basis vectors should have the same number of entries")
+                        raise ValueError("All vectors should have the same number of entries")
                     span.append(vector)
         else:
             raise ValueError("You must give at least one basis vector!")
@@ -36,32 +38,40 @@ class VectorSpace:
     #Pre: need to calculate the vectors in the span in reduced echelon form
     #Post: vectors calculated and returned
     def __findReducedSpan(self, span):
-        vectorsInMatrix = PadicMatrix(span).getReducedEchelonForm()
+        vectorsInMatrix = PadicMatrix(len(span),span[0].getRows(),span).getReducedEchelonForm()
         vectors = []
-        length = 1
-        if(len(vectorsInMatrix)>0):
-            length = vectorsInMatrix[0].getRows()
-            zero = PadicVector([0]*length)
-            for vector in vectorsInMatrix:
-                if(not vector.equals(zero)):
-                    vectors.append(PadicVector(vector))
+        length = vectorsInMatrix.getRows()
+        if(length>0):
+            zero = PadicNumber([],0)
+            zerovector = PadicVector([zero]*length)
+            for row in range(length):
+                currentVector = []
+                for col in range(vectorsInMatrix.getColumns()):
+                    currentVector.append(vectorsInMatrix.getValue(row,col))
+                vector = PadicVector(currentVector)
+                if(not vector.equals(zerovector)):
+                    vectors.append(vector)
         if(len(vectors)<=0):
-            vectors.append(PadicVector([0]*length))
+            vectors.append(zerovector)
         return vectors
 
     #Pre: need to see if this VectorSpace is equivalent to other
     #Post: if equivalent, True returned. else, False returned
     def equals(self, other):
         if(not isinstance(other,VectorSpace)):
-            return False
-        theseVectors = self.getReducedVectors()
-        otherVectors = other.getReducedVectors()
+            raise ValueError("Both objects must be VectorSpaces!")
+        theseVectors = []
+        for vector in self.getReducedVectors():
+            theseVectors.append(vector.copy())
+        otherVectors = []
+        for vector in other.getReducedVectors():
+            otherVectors.append(vector.copy())
         if(len(theseVectors)==len(otherVectors)):
             for vector in theseVectors:
                 removed = False
-                for other in otherVectors:
-                    if(vector.equals(other)):
-                        otherVectors.remove(other)
+                for otherVector in otherVectors:
+                    if(vector.equals(otherVector)):
+                        otherVectors.remove(otherVector)
                         removed = True
                 if(not removed):
                     return False
@@ -74,9 +84,28 @@ class VectorSpace:
     def getIntersection(self, otherVectorSpace):
         if(not isinstance(otherVectorSpace,VectorSpace)):
             raise ValueError("You should only intersect a VectorSpace with another VectorSpace")
-        otherVectors = otherVectorSpace.getBasisVectors()
-        theseVectors = self.getBasisVectors()
+        if(self.equals(otherVectorSpace)):
+            return self
+        otherVectors = otherVectorSpace.getReducedVectors()
+        theseVectors = self.getReducedVectors()
+        matrix = PadicMatrix(otherVectors+theseVectors,False).getReducedEchelon()
+
+        #get list of free columns without pivots
+        #for each free variable/column:
+            #make vector of values corresponding to this variable
+            #with this vector, plug values in for first len(span) vectors
+        
        #TODO
+
+
+    #Pre: need to print this VectorSpace
+    #Post: string describing VectorSpace returned
+    def __str__(self):
+        description = "Vector Space spanned by:\n"
+        vectors = self.getVectors()
+        for v in range(len(vectors)):
+            description = description + "vector "+str(v)+":\n"+str(vectors[v])+"\n"
+        return description
         
     #Pre: need to get the reduced spanning vectors for this VectorSpace
     #Post: reduced spanning vectors returned
