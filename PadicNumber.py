@@ -1,4 +1,5 @@
 #By Jessica Rankins Spring 2018
+import copy
 
 class PadicNumber:
     """PadicNumber: holds information pertaining to a p-adic number and
@@ -34,6 +35,7 @@ class PadicNumber:
             raise ValueError(str(smallestPower)+" is not an integer power!")
         for coefficient in coefficientList:
             if(not isinstance(coefficient,int) or coefficient>=self.__prime or coefficient<0):
+                print(coefficientList)
                 raise ValueError("Coefficient(s) are not in the range 1,...,(p-1) for prime p!")
         self.__coefficients = self.__fillInCoefficients(coefficientList, smallestPower)
 
@@ -71,6 +73,15 @@ class PadicNumber:
                 coefficients[currentPower] = 0
                 currentPower = currentPower+1
         return coefficients
+
+    #Pre: need to get a deep copy of this PadicNumber
+    #Post: deep copy returned
+    def copy(self):
+        newcoefs = []
+        originals = self.getCoefficients()
+        for i in range(len(originals)):
+            newcoefs.append(originals[self.getSmallestPower()+i])
+        return PadicNumber(newcoefs,self.getSmallestPower())
 
     #Pre: need to get the absolute value of this p-adic number
     #Post: p-adic absolute value returned
