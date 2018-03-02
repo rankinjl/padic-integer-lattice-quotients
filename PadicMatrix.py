@@ -76,7 +76,7 @@ class PadicMatrix:
             if(not isinstance(vectorList[0],PadicMatrix)):
                 raise ValueError("The vectors must be PadicVector instances!")
             if(len(vectorList)!=self.__columns):
-                raise ValueError("The number of vectors does not amtch the number of columns!")
+                raise ValueError("The number of vectors does not match the number of columns!")
             rowsAndCols = [[]]*self.__rows
             for i in range(self.__rows):
                 rowsAndCols[i] = [0]*self.__columns

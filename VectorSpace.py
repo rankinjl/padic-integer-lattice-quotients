@@ -40,13 +40,13 @@ class VectorSpace:
     def __findReducedSpan(self, span):
         vectorsInMatrix = PadicMatrix(len(span),span[0].getRows(),span).getReducedEchelonForm()
         vectors = []
-        length = vectorsInMatrix.getRows()
+        length = vectorsInMatrix.getColumns()
         if(length>0):
             zero = PadicNumber([],0)
             zerovector = PadicVector([zero]*length)
-            for row in range(length):
+            for row in range(vectorsInMatrix.getRows()):
                 currentVector = []
-                for col in range(vectorsInMatrix.getColumns()):
+                for col in range(length):
                     currentVector.append(vectorsInMatrix.getValue(row,col))
                 vector = PadicVector(currentVector)
                 if(not vector.equals(zerovector)):
@@ -83,19 +83,68 @@ class VectorSpace:
     #Post: intersection returned as a VectorSpace
     def getIntersection(self, otherVectorSpace):
         if(not isinstance(otherVectorSpace,VectorSpace)):
-            raise ValueError("You should only intersect a VectorSpace with another VectorSpace")
+            raise ValueError("otherVectorSpace should be a VectorSpace!")
         if(self.equals(otherVectorSpace)):
             return self
         otherVectors = otherVectorSpace.getReducedVectors()
         theseVectors = self.getReducedVectors()
-        matrix = PadicMatrix(otherVectors+theseVectors,False).getReducedEchelon()
+        rows = otherVectors[0].getRows() 
+        if(rows!=theseVectors[0].getRows()):
+            raise ValueError("VectorSpaces must have vectors with the same number of entries!")
+        columns = len(otherVectors)+len(theseVectors)
+        matrix = PadicMatrix(rows,columns,theseVectors+otherVectors,False).getReducedEchelonForm()
 
-        #get list of free columns without pivots
-        #for each free variable/column:
-            #make vector of values corresponding to this variable
-            #with this vector, plug values in for first len(span) vectors
+        pivots,nonpivotCols = self.__getPivotLocations(matrix)
         
-       #TODO
+        nullSpaceVectors = [[]]*len(nonpivotCols)
+        zero = PadicNumber([],0)
+        one = PadicNumber([1],0)
+        for i in range(len(nonpivotCols)):
+            nullSpaceVectors[i] = [zero]*columns
+            nullSpaceVectors[i][nonpivotCols[i]] = one
+            for j in range(len(nonpivotCols)):
+                if(i!=j):
+                    nullSpaceVectors[i][nonpivotCols[j]] = zero
+                    
+        for (r,c) in pivots:
+            for col in nonpivotCols:
+                value = matrix.getValue(r,col)
+                nullSpaceVectors[nonpivotCols.index(col)][c] = value.getAdditiveInverse()
+        intersectionVectors = []
+        for vector in nullSpaceVectors:
+            for i in range(len(theseVectors)):
+                v = []
+                for j in range(rows):
+                    v.append(vector[i].multiply(matrix.getValue(j,i)))
+                intersectionVectors.append(PadicVector(v))
+        if(len(intersectionVectors)>0):
+            return VectorSpace(self.__findReducedSpan(intersectionVectors))
+        else:
+            return VectorSpace([PadicVector([zero]*rows)])
+        
+    #Pre: need to get the locations with pivots in them
+    #Post: pivot locations in matrix returned as a list of tuples of integers
+    # second thing returned is non-pivot columns returned as list of integers
+    def __getPivotLocations(self,matrix):
+        rows = matrix.getRows()
+        columns = matrix.getColumns()
+        pivots = []
+        nonpivots = []
+        zero = PadicNumber([],0)
+        for c in range(columns):
+            pivot = (-1,-1)
+            for r in range(rows):
+                if(not matrix.getValue(r,c).equals(zero)):
+                    if(pivot==(-1,-1) and not [item for item in pivots if item[0]==r]):
+                        pivot = (r,c)
+                    else:
+                        #already have "pivot" but another nonzero
+                        pivot = (-1,-1)
+                        nonpivots.append(c)
+                        break
+            if(pivot!=(-1,-1)):
+                pivots.append(pivot)
+        return pivots,nonpivots
 
 
     #Pre: need to print this VectorSpace
