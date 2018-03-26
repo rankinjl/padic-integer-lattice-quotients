@@ -183,7 +183,6 @@ class PadicMatrix:
                             scalar = value.divide(curmax).getAdditiveInverse()
                             matrix.addScalarRows(i,scalar,pivotRow)
                 matrix.scaleRow(pivotRow,curmax.getMultiplicativeInverse())
-                    #print(matrix)
                 pivotRow = pivotRow+1
                 pivotCol = pivotCol+1
                 row=row+1

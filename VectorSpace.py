@@ -102,21 +102,20 @@ class VectorSpace:
         for i in range(len(nonpivotCols)):
             nullSpaceVectors[i] = [zero]*columns
             nullSpaceVectors[i][nonpivotCols[i]] = one
-            for j in range(len(nonpivotCols)):
-                if(i!=j):
-                    nullSpaceVectors[i][nonpivotCols[j]] = zero
+            for p in pivots:
+                nullSpaceVectors[i][p[1]] = matrix.getValue(p[0],nonpivotCols[i]).getAdditiveInverse()
                     
-        for (r,c) in pivots:
-            for col in nonpivotCols:
-                value = matrix.getValue(r,col)
-                nullSpaceVectors[nonpivotCols.index(col)][c] = value.getAdditiveInverse()
         intersectionVectors = []
         for vector in nullSpaceVectors:
-            for i in range(len(theseVectors)):
-                v = []
-                for j in range(rows):
-                    v.append(vector[i].multiply(matrix.getValue(j,i)))
-                intersectionVectors.append(PadicVector(v))
+            thisvector = []
+            for j in range(rows):
+                value = zero
+                for i in range(len(theseVectors)):
+                    value = value.add(vector[i].multiply(theseVectors[i].getValue(j,0)))
+                thisvector.append(value)
+            intersectionVectors.append(PadicVector(thisvector))
+            for i in intersectionVectors:
+                print(i)
         if(len(intersectionVectors)>0):
             return VectorSpace(self.__findReducedSpan(intersectionVectors))
         else:
