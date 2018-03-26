@@ -7,8 +7,6 @@ from VectorSpace import *
 #Post: helpful tips displayed to user
 def displayHelp():
     print("Welcome to the p-adic number program!")
-    print("To create a p-adic number, use [varName = ] PadicNumber(list_of_coefficients,smallest_power)")
-    print("For example, 'one = Padic([1],0)' or 'Padic([1,1,0,0,1),-3)")
     print()
 
     
@@ -23,6 +21,39 @@ def isPrime(number):
             if number%i==0:
                 flag = False
         return flag
+
+def testVSIntersection():
+    '''
+    one = PadicNumber([1],0)
+    zero = PadicNumber([],0)
+    v1 = PadicVector([one,zero,zero])
+    v2 = PadicVector([zero,one,zero])
+    v = VectorSpace([v1,v2])
+    w = VectorSpace([v2,v1])
+    print(v.getIntersection(w))
+    
+    one = PadicNumber([1],0)
+    zero = PadicNumber([],0)
+    v1 = PadicVector([one,zero,zero,zero])
+    v2 = PadicVector([zero,one,zero,zero])
+    v3 = PadicVector([zero,zero,one,zero])
+    v4 = PadicVector([zero,zero,zero,one])
+    v = VectorSpace([v1,v2,v3])
+    w = VectorSpace([v2,v3,v4])
+    print(v.getIntersection(w))
+
+    zero = PadicNumber([],0)
+    one = PadicNumber([1],0)
+    two = PadicNumber([2],0)
+    three = PadicNumber([3],0)
+    v1 = PadicVector([one,one,zero])
+    v2 = PadicVector([zero,one,one])
+    w1 = PadicVector([zero,two,two])
+    w2 = PadicVector([one,zero,three])
+    v = VectorSpace([v1,v2])
+    w = VectorSpace([w1,w2])
+    print(v.getIntersection(w))
+    '''
 
 #Pre: introduce the user to the p-adic program and allow them to set prime
     #and precision
@@ -42,7 +73,6 @@ def main():
         except:
             pass
     PadicNumber.setPrimePrecision(prime,precision)
-
-
+    testVSIntersection()
 
 main()
