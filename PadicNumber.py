@@ -91,6 +91,14 @@ class PadicNumber:
         else:
             return self.__prime**(-self.__smallestPower)
 
+    #Pre: need to get the p-adic valuation of this p-adic number
+    #Post: p-adic valuation returned
+    def getPadicValuation(self):
+        if(self.__coefficients[self.__smallestPower]==0):
+            return "INF"
+        else:
+            return self.__smallestPower
+
     #Pre: need the precision of the p-adic number
     #Post: precision returned
     def getPrecision(self):

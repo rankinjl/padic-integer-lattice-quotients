@@ -73,6 +73,9 @@ def main():
         except:
             pass
     PadicNumber.setPrimePrecision(prime,precision)
+
+    
+    
     testVSIntersection()
 
 main()
