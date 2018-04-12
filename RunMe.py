@@ -2,6 +2,7 @@ from PadicNumber import *
 from PadicMatrix import *
 from PadicVector import *
 from VectorSpace import *
+from IntegerLattice import *
 
 #Pre: need to display helpful tips to user
 #Post: helpful tips displayed to user
@@ -55,6 +56,40 @@ def testVSIntersection():
     print(v.getIntersection(w))
     '''
 
+def testIL():
+    
+    one = PadicNumber([1],0)
+    zero = PadicNumber([],0)
+    v1 = PadicVector([one,zero,zero,zero])
+    v2 = PadicVector([zero,one,zero,zero])
+    v3 = PadicVector([zero,zero,one,zero])
+    v4 = PadicVector([zero,zero,zero,one])
+    v = IntegerLattice([v1,v2,v3])
+    w = IntegerLattice([v2,v3,v4])
+    print(v.getIntersection(w))
+    print("\n")
+    #want [0,1,0,0] and [0,0,1,0]
+
+    v1 = PadicVector([PadicNumber([2],0),one])
+    w1 = PadicVector([PadicNumber([1],1),PadicNumber([1],1).divide(PadicNumber([2],0))])
+    v = IntegerLattice([v1])
+    w = IntegerLattice([w1])
+    print(v.getIntersection(w))
+    #get [1,5/2] since 5/2 is an integer
+    '''
+
+    It chose 1 to have the minimum valuation (they both had valuation 1)
+    What if it chose 5/2 instead???? We would get a negative valuation for 1
+
+    Do we want to divide by the number with the minimum valuation, or
+    divide by p^minvaluation for the minvaluation*******
+
+    v1 = PadicVector([PadicNumber([1],-2),PadicNumber([1],0)])
+    w1 = PadicVector([PadicNumber([1],0),PadicNumber([],0)])
+    m = PadicMatrix(2,2,[v1,w1],True)
+    print(m.getReducedEchelonForm(True))
+    '''
+
 #Pre: introduce the user to the p-adic program and allow them to set prime
     #and precision
 #Post: help displayed, prime and precision set
@@ -75,7 +110,7 @@ def main():
     PadicNumber.setPrimePrecision(prime,precision)
 
     
-    
+    testIL()
     testVSIntersection()
 
 main()
