@@ -1,5 +1,6 @@
 #By Jessica Rankins Spring 2018
 import copy
+import math
 
 class PadicNumber:
     """PadicNumber: holds information pertaining to a p-adic number and
@@ -95,7 +96,7 @@ class PadicNumber:
     #Post: p-adic valuation returned
     def getPadicValuation(self):
         if(self.__coefficients[self.__smallestPower]==0):
-            return "INF"
+            return math.inf
         else:
             return self.__smallestPower
 
