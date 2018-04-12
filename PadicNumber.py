@@ -245,6 +245,8 @@ class PadicNumber:
     #Pre: need to subtract other from self
     #Post: self-other returned
     def subtract(self, other):
+        if(not isinstance(other,PadicNumber)):
+            raise ValueError("You must subtract two PadicNumbers!")
         return self.add(other.getAdditiveInverse())
 
 
@@ -288,4 +290,6 @@ class PadicNumber:
     #Pre: need to divide self by other
     #Post: self/other returned
     def divide(self, other):
+        if(not isinstance(other,PadicNumber)):
+            raise ValueError("You must divide two PadicNumbers!")
         return self.multiply(other.getMultiplicativeInverse())
