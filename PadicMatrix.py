@@ -1,12 +1,6 @@
 #By Jessica Rankins Spring 2018
 from PadicNumber import *
 
-
-#TODO:
-#test reducedechelonform(),
-#VS findreducedspan(), equals()
-
-
 class PadicMatrix:
     """PadicMatrix: holds p-adic numbers in an nxm matrix and allows
     different operations to be done on this matrix"""
@@ -146,7 +140,7 @@ class PadicMatrix:
 
     #Pre: need to get the reduced echelon form of this PadicMatrix
     #Post: reduced echelon form calculated and returned
-    def getReducedEchelonForm(self):
+    def getReducedEchelonForm(self,intlattice=False):
         #make new Matrix object so not change self
         matrix = self.copy()
         #For each row:
@@ -181,16 +175,27 @@ class PadicMatrix:
                         value = matrix.getValue(i,pivotCol)
                         if(not value.equals(PadicNumber([],0))):
                             scalar = value.divide(curmax).getAdditiveInverse()
-                            matrix.addScalarRows(i,scalar,pivotRow)
-                matrix.scaleRow(pivotRow,curmax.getMultiplicativeInverse())
+                            if(intlattice):
+                                if(scalar.getPadicAbsoluteValue()<=1):
+                                    #scalar is padic integer, so has additive inverse also integer => invertible
+                                    matrix.addScalarRows(i,scalar,pivotRow)
+                            else:
+                                matrix.addScalarRows(i,scalar,pivotRow)
+                
+                if(intlattice):
+                    scalar = PadicNumber([1],curmax.getPadicValuation()).divide(curmax)
+                    matrix.scaleRow(pivotRow,scalar)
+                else:
+                    inverse = curmax.getMultiplicativeInverse()
+                    matrix.scaleRow(pivotRow,inverse)
                 pivotRow = pivotRow+1
                 pivotCol = pivotCol+1
                 row=row+1
            
         return matrix
 
-    #Pre: need to multiply row by value in matrix
-    #Post: row multiplied by value and matrix returned
+    #Pre: need to do value*rowToUse+rowToManipulate = rowToManipulate
+    #Post: row addition done
     def addScalarRows(self, rowToManipulate, value, rowToUse):
         if(not isinstance(rowToManipulate,int) or not isinstance(rowToUse,int) or not(isinstance(value,PadicNumber))):
             raise ValueError("rows must be integers and value must be PadicNumber!")
@@ -204,8 +209,8 @@ class PadicMatrix:
                 thisrow[i] = thisrow[i].add(useRow[i].multiply(value))
         self.getValues()[rowToManipulate] = thisrow
 
-    #Pre: need to add rowToAdd+rowToAddTo=rowToAddTo
-    #Post: rows added and matrix returned
+    #Pre: need to multiply row rowToScale by scalar
+    #Post: row multiplied by scalar
     def scaleRow(self, rowToScale,scalar):
         if(not isinstance(rowToScale,int) or not(isinstance(scalar,PadicNumber))):
             raise ValueError("Row must be an integer and scalar must be PadicNumber!")
@@ -219,7 +224,7 @@ class PadicMatrix:
         self.getValues()[rowToScale] = thisrow
 
     #Pre: need to swap two rows in matrix
-    #Post: row a and row b swapped in matrix and matrix returned
+    #Post: row a and row b swapped in matrix
     def swapRows(self, a, b):
         if(not isinstance(a,int) or not isinstance(b,int)):
             raise ValueError("a and b must be integers!")
