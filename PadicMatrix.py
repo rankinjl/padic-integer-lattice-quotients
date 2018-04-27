@@ -171,7 +171,7 @@ class PadicMatrix:
                 #zero out all numbers beneath this pivot and above this pivot
                     #located at pivotCol, pivotRow with value curmax
                 for i in range(self.getRows()):
-                    if(i!=pivotRow):
+                    if(i!=pivotRow and not(intlattice and i<pivotRow)):
                         value = matrix.getValue(i,pivotCol)
                         if(not value.equals(PadicNumber([],0))):
                             scalar = value.divide(curmax).getAdditiveInverse()
@@ -183,8 +183,23 @@ class PadicMatrix:
                                 matrix.addScalarRows(i,scalar,pivotRow)
                 
                 if(intlattice):
+                    #scale pivot
                     scalar = PadicNumber([1],curmax.getPadicValuation()).divide(curmax)
                     matrix.scaleRow(pivotRow,scalar)
+                    curmax = matrix.getValue(pivotRow,pivotCol)
+                    newcoefs = []
+                    maxcoefs = curmax.getCoefficients()
+                    #scale above pivot
+                    for i in range(self.getRows()):
+                        if(i<pivotRow):
+                            value = matrix.getValue(i,pivotCol)
+                            if(not value.equals(PadicNumber([],0))):
+                                for(k,v) in maxcoefs.items():
+                                    if k>=curmax.getPadicValuation():
+                                        newcoefs.append(v)
+                                num = PadicNumber(newcoefs,curmax.getPadicValuation())
+                                scalar = num.divide(curmax).getAdditiveInverse()
+                                matrix.addScalarRows(i,scalar,pivotRow)
                 else:
                     inverse = curmax.getMultiplicativeInverse()
                     matrix.scaleRow(pivotRow,inverse)
