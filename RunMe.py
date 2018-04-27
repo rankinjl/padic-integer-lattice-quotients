@@ -45,19 +45,20 @@ def testVSIntersection():
 
     zero = PadicNumber([],0)
     one = PadicNumber([1],0)
+    a = PadicNumber([1],-2)
     two = PadicNumber([2],0)
     three = PadicNumber([3],0)
-    v1 = PadicVector([one,one,zero])
-    v2 = PadicVector([zero,one,one])
+    v1 = PadicVector([one,a,zero])
+    v2 = PadicVector([a.getMultiplicativeInverse(),zero,one])
     w1 = PadicVector([zero,two,two])
-    w2 = PadicVector([one,zero,three])
-    v = VectorSpace([v1,v2])
-    w = VectorSpace([w1,w2])
+    w2 = PadicVector([one,zero,zero])
+    v = IntegerLattice([v1,v2])
+    w = IntegerLattice([w1, w2])
     print(v.getIntersection(w))
     '''
 
 def testIL():
-    
+    '''
     one = PadicNumber([1],0)
     zero = PadicNumber([],0)
     v1 = PadicVector([one,zero,zero,zero])
@@ -76,14 +77,15 @@ def testIL():
     w = IntegerLattice([w1])
     print(v.getIntersection(w))
     #get [1,5/2] since 5/2 is an integer
+    
+    one = PadicNumber([1],0)
+    cubed = PadicNumber([1],3)
+    v = IntegerLattice([PadicVector([one,PadicNumber([1],1)]),PadicVector([PadicNumber([1],2),one])])
+    w = IntegerLattice([PadicVector([one,cubed]),PadicVector([cubed,one])])
+    print(v.getIntersection(w))
     '''
-
-    It chose 1 to have the minimum valuation (they both had valuation 1)
-    What if it chose 5/2 instead???? We would get a negative valuation for 1
-
-    Do we want to divide by the number with the minimum valuation, or
-    divide by p^minvaluation for the minvaluation*******
-
+    
+    '''
     v1 = PadicVector([PadicNumber([1],-2),PadicNumber([1],0)])
     w1 = PadicVector([PadicNumber([1],0),PadicNumber([],0)])
     m = PadicMatrix(2,2,[v1,w1],True)
