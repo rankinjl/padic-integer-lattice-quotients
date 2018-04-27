@@ -87,7 +87,7 @@ class PadicNumber:
     #Pre: need to get the absolute value of this p-adic number
     #Post: p-adic absolute value returned
     def getPadicAbsoluteValue(self):
-        if(self.__coefficients[self.__smallestPower]==0):
+        if(self.__zero()):
             return 0
         else:
             return self.__prime**(-self.__smallestPower)
@@ -95,7 +95,7 @@ class PadicNumber:
     #Pre: need to get the p-adic valuation of this p-adic number
     #Post: p-adic valuation returned
     def getPadicValuation(self):
-        if(self.__coefficients[self.__smallestPower]==0):
+        if(self.__zero()):
             return math.inf
         else:
             return self.__smallestPower
@@ -120,6 +120,36 @@ class PadicNumber:
     def getCoefficients(self):
         return self.__coefficients
 
+    #Pre: need to check if these this PadicNumbers is a zero
+    #Post: true returned if zero, false otherwise
+    def __zero(self):
+        these = self.getCoefficients()
+        smallest = self.getSmallestPower()
+        zero = True
+        for i in range(len(these)):
+            if(these[smallest+i]!=0):
+                zero = False
+        return zero
+
+    #Pre: need to check if these two PadicNumbers are zero
+    #Post: true returned if both zeros, false otherwise
+    def __zeros(self, other):
+        these = self.getCoefficients()
+        others = other.getCoefficients()
+        smallest = self.getSmallestPower()
+        othersmallest = other.getSmallestPower()
+        
+        #check if they are both zero
+        zero = True
+        for i in range(len(these)):
+            if(these[smallest+i]!=0):
+                zero = False
+        if(zero):
+            for i in range(len(others)):
+                if(others[othersmallest+i]!=0):
+                    zero = False
+        return zero
+
     #Pre: need to see if this PadicNumber is equivalent to other
     #Post: if equivalent, True returned. else, False returned
     def equals(self, other):
@@ -127,11 +157,14 @@ class PadicNumber:
             return False
         if(self.getPrime()!=other.getPrime() or self.getPrecision()!=other.getPrecision()):
             return False
-        smallest = self.getSmallestPower()
-        if(smallest!=other.getSmallestPower()):
-            return False
+        if(self.__zeros(other)):
+            return True
         these = self.getCoefficients()
         others = other.getCoefficients()
+        smallest = self.getSmallestPower()
+        othersmallest = other.getSmallestPower()
+        if(smallest!=othersmallest):
+            return False
         for i in range(len(these)):
             if(these[smallest+i]!=others[smallest+i]):
                 return False
@@ -179,7 +212,7 @@ class PadicNumber:
         currentPower = self.__smallestPower
         newSmallestExponent = 0 - currentPower
         carry = 0
-        if(theseCoefficients[currentPower]==0):
+        if(self.__zero()):
             #this number is 0, so it does not have a multiplicative inverse
             raise ZeroDivisionError("The multiplicative inverse of 0 does not exist!")
         else:
