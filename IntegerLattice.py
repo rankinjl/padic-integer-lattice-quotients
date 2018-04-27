@@ -20,8 +20,3 @@ class IntegerLattice(VectorSpace):
         if(len(padicVectorsList)==0):
             raise ValueError("The list of PadicVectors must have at least one thing in it!")
         VectorSpace.__init__(self,padicVectorsList,True)
-
-'''
-intersection method for int lattice in vector space
-Does set attibutes show up when call?
-'''
