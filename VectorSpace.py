@@ -123,7 +123,10 @@ class VectorSpace:
                         curmin = other
                 for i in range(len(v)):
                     v[i] = v[i].divide(PadicNumber([1],curmin))
-            
+        '''for i in nullSpaceVectors:
+            for n in i:
+                print(n)
+            print()'''
         vectors = theseVectors
         flag = lattice and not self.isIntLattice()
         if(flag):
