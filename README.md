@@ -8,4 +8,4 @@ To download the Python IDLE environment, follow the directions at https://www.te
 
 To run the P-adic environment, the user should open "RunMe.py" with IDLE (navigate to "RunMe.py" in the Windows Explorer or file viewer, right click and select "Edit with IDLE"). Then select the "Run" tab and "Run Module"  to establish a prime and a precision to be used throughout the session. Then start coding!
 
-I was responsible for writing all of the code in this project through the guidance of my advisor, Dr. Johnathon Needleman of Le Moyne College.
+I was responsible for writing all of the code in this project through the guidance of my advisor, Dr. Needleman of Le Moyne College.
