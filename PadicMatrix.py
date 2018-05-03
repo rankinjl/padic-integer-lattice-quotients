@@ -188,18 +188,19 @@ class PadicMatrix:
                     matrix.scaleRow(pivotRow,scalar)
                     curmax = matrix.getValue(pivotRow,pivotCol)
                     newcoefs = []
-                    maxcoefs = curmax.getCoefficients()
                     #scale above pivot
                     for i in range(self.getRows()):
                         if(i<pivotRow):
                             value = matrix.getValue(i,pivotCol)
+                            thesecoefs = value.getCoefficients()
                             if(not value.equals(PadicNumber([],0))):
-                                for(k,v) in maxcoefs.items():
+                                for(k,v) in thesecoefs.items():
                                     if k>=curmax.getPadicValuation():
                                         newcoefs.append(v)
                                 num = PadicNumber(newcoefs,curmax.getPadicValuation())
                                 scalar = num.divide(curmax).getAdditiveInverse()
-                                matrix.addScalarRows(i,scalar,pivotRow)
+                                if(not scalar.equals(PadicNumber([],0))):
+                                    matrix.addScalarRows(i,scalar,pivotRow)
                 else:
                     inverse = curmax.getMultiplicativeInverse()
                     matrix.scaleRow(pivotRow,inverse)

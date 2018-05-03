@@ -99,8 +99,11 @@ class VectorSpace:
         if(rows!=theseVectors[0].getRows()):
             raise ValueError("VectorSpaces must have vectors with the same number of entries!")
         columns = len(otherVectors)+len(theseVectors)
-        matrix = PadicMatrix(rows,columns,theseVectors+otherVectors,False).getReducedEchelonForm()
-
+        
+        matrix = PadicMatrix(rows,columns,theseVectors+otherVectors,False)
+        print(matrix)
+        matrix = matrix.getReducedEchelonForm()
+        print(matrix)
         pivots,nonpivotCols = self.__getPivotLocations(matrix)
         
         nullSpaceVectors = [[]]*len(nonpivotCols)
@@ -111,7 +114,7 @@ class VectorSpace:
             nullSpaceVectors[i][nonpivotCols[i]] = one
             for p in pivots:
                 nullSpaceVectors[i][p[1]] = matrix.getValue(p[0],nonpivotCols[i]).getAdditiveInverse()
-
+                #print(nullSpaceVectors[i][p[1]])
         lattice = self.__intlattice or otherVectorSpace.isIntLattice()
         if(lattice):
             #scale each nullSpaceVector by PadicNumber with smallest valuation
