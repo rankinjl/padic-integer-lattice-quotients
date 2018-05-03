@@ -101,9 +101,7 @@ class VectorSpace:
         columns = len(otherVectors)+len(theseVectors)
         
         matrix = PadicMatrix(rows,columns,theseVectors+otherVectors,False)
-        print(matrix)
         matrix = matrix.getReducedEchelonForm()
-        print(matrix)
         pivots,nonpivotCols = self.__getPivotLocations(matrix)
         
         nullSpaceVectors = [[]]*len(nonpivotCols)
