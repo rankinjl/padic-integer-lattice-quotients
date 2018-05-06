@@ -36,7 +36,7 @@ class PadicNumber:
             raise ValueError(str(smallestPower)+" is not an integer power!")
         for coefficient in coefficientList:
             if(not isinstance(coefficient,int) or coefficient>=self.__prime or coefficient<0):
-                print(coefficientList)
+                #print(coefficientList)
                 raise ValueError("Coefficient(s) are not in the range 1,...,(p-1) for prime p!")
         self.__coefficients = self.__fillInCoefficients(coefficientList, smallestPower)
 
@@ -243,6 +243,7 @@ class PadicNumber:
             raise ValueError("You must add two PadicNumbers!")
         smallestPower = min(other.getSmallestPower(),self.getSmallestPower())
         p = self.__prime
+        totalprecision = self.getPrecision()*2
         currentPower = smallestPower
         otherCoefficients = other.getCoefficients().copy()
         thisCoefficients = self.getCoefficients().copy()
@@ -250,7 +251,7 @@ class PadicNumber:
         carry = 0
         index = 0
         
-        while((otherCoefficients or thisCoefficients) and index<self.__precision):
+        while((otherCoefficients or thisCoefficients) and index<totalprecision):
             #while at least one of the dictionaries is not empty
             try:
                 othernum = otherCoefficients[currentPower]
@@ -272,7 +273,12 @@ class PadicNumber:
             newCoefficients.append(newnum)
             currentPower = currentPower+1
             index = index+1
-            
+        while(carry!=0):
+            newCoefficients.append(carry%p)
+            carry = carry//p
+        while(len(newCoefficients)>0 and newCoefficients[0] == 0):
+            newCoefficients.remove(0)
+            smallestPower = smallestPower +1
         return PadicNumber(newCoefficients,smallestPower)
             
     #Pre: need to subtract other from self
