@@ -23,6 +23,21 @@ def isPrime(number):
                 flag = False
         return flag
 
+
+def RowReductionExample():
+    #Let p = 3
+    zero = PadicNumber([],0)
+    one = PadicNumber([1],0)
+    a = PadicNumber([1],-2)
+    twelve = PadicNumber([1,1],1)
+    v1 = PadicVector([twelve,a,one])
+    v2 = PadicVector([a.getMultiplicativeInverse(),zero,one])
+    v3 = PadicVector([zero,a.getMultiplicativeInverse(),one])
+    v = IntegerLattice([v1,v2,v3])
+    for i in (v.getReducedVectors()):
+        print(i)
+    #whereas VectorSpace would result in Identity matrix
+
 def testVSIntersection():
     '''
     one = PadicNumber([1],0)
@@ -53,9 +68,14 @@ def testVSIntersection():
     w1 = PadicVector([zero,two,two])
     w2 = PadicVector([one,zero,zero])
     v = IntegerLattice([v1,v2])
-    w = IntegerLattice([w1, w2])
+    w = IntegerLattice([w1,w2])
     print(v.getIntersection(w))
-    '''
+    #print()
+    #vspace = VectorSpace([v1,v2])
+    #wspace = VectorSpace([w1,w2])
+    #print(vspace.getIntersection(wspace))
+'''
+    
 
 def testIL():
     '''
@@ -111,8 +131,8 @@ def main():
             pass
     PadicNumber.setPrimePrecision(prime,precision)
 
-    
-    testIL()
-    testVSIntersection()
+    #RowReductionExample()
+    #testIL()
+    #testVSIntersection()
 
 main()
